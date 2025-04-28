@@ -12,8 +12,9 @@
     <style>
         /* Custom Styles */
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins', sans-serif; /* Apply a clean, modern font */
         }
+        /* Simple fade-in animation */
         .fade-in {
             animation: fadeIn 1s ease-in-out;
         }
@@ -21,13 +22,15 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Style for the example gallery grid */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
         }
+        /* Simple modal styles */
         .modal {
-            display: none;
+            display: none; /* Hidden by default */
             position: fixed;
             z-index: 50;
             left: 0;
@@ -35,9 +38,9 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.6);
-            align-items: center;
-            justify-content: center;
+            background-color: rgba(0,0,0,0.6); /* Dim background */
+            align-items: center; /* Vertical center */
+            justify-content: center; /* Horizontal center */
         }
         .modal-content {
             background-color: #fefefe;
@@ -47,7 +50,7 @@
             width: 90%; /* More responsive */
             max-width: 600px; /* Allow slightly larger modal */
             border-radius: 0.5rem;
-            position: relative;
+            position: relative; /* For close button positioning */
         }
         .close-button {
             color: #aaa;
@@ -63,6 +66,7 @@
             color: black;
             text-decoration: none;
         }
+        /* Style for step numbers */
         .step-number {
             background-color: #fbbf24; /* Amber-400 */
             color: #1f2937; /* Gray-800 */
@@ -76,6 +80,7 @@
             font-size: 1.125rem; /* text-lg */
             margin-bottom: 0.5rem; /* mb-2 */
         }
+        /* Subtle hover effect for buttons */
         .cta-button {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
@@ -83,6 +88,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+        /* Hover effect for testimonial cards */
         .testimonial-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -102,8 +108,9 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        /* Style for selected options */
-        input[type="radio"]:checked + label.option-label { /* Be more specific */
+        /* Style for selected options (radio buttons styled as cards/buttons) */
+        input[type="radio"]:checked + label.option-label,
+        input[type="radio"]:checked + label.contact-method-label {
             border-color: #fbbf24; /* Amber-400 */
             background-color: #fffbeb; /* Amber-50 */
             box-shadow: 0 0 0 2px #fbbf24;
@@ -126,7 +133,7 @@
              background-color: #f9fafb; /* Gray-50 */
         }
         .option-label img {
-            max-height: 80px;
+            max-height: 80px; /* Limit image height in options */
             margin-bottom: 0.5rem;
             display: block;
             margin-left: auto;
@@ -141,6 +148,29 @@
              color: #ca8a04; /* amber-600 */
              margin-top: 0.5rem; /* Add some space above price */
         }
+        /* Contact method label style */
+         .contact-method-label {
+            border: 2px solid #e5e7eb;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            display: inline-flex; /* Use inline-flex for side-by-side */
+            align-items: center;
+            margin-right: 0.5rem; /* Add space between buttons */
+        }
+        .contact-method-label:hover {
+             border-color: #d1d5db;
+             background-color: #f9fafb;
+        }
+        /* Hide/show contact input fields */
+        .contact-input-container {
+            display: none; /* Hide contact inputs initially */
+        }
+        .contact-input-container.active {
+            display: block; /* Show active contact input */
+        }
+        /* Summary price display */
         .price-display {
             font-size: 1.25rem; /* text-xl */
             font-weight: 600; /* font-semibold */
@@ -148,6 +178,7 @@
             margin-top: 1rem;
             text-align: right;
         }
+        /* Summary line item styling */
         .summary-line {
             display: flex;
             justify-content: space-between;
@@ -160,6 +191,7 @@
              padding-bottom: 0;
              margin-bottom: 0;
         }
+        /* Summary total styling */
         .summary-total {
              border-top: 1px solid #d1d5db; /* border-t border-gray-300 */
              padding-top: 0.75rem; /* pt-3 */
@@ -168,10 +200,12 @@
          /* Input validation error style */
         input.border-red-500,
         label.border-red-500 { /* Style label if radio/checkbox invalid */
-            border-color: #ef4444; /* Red-500 */
+            border-color: #ef4444 !important; /* Red-500, use important to override hover */
         }
-        .radio-group-invalid .option-label { /* Style all labels in group if none selected */
-             border-color: #ef4444;
+        /* Style radio group container when invalid */
+        .radio-group-invalid .option-label,
+        .radio-group-invalid .contact-method-label {
+             border-color: #ef4444 !important; /* Red-500 */
         }
     </style>
 </head>
@@ -222,8 +256,7 @@
                 </div>
                  <div class="flex flex-col items-center fade-in" style="animation-delay: 0.2s;">
                     <div class="step-number">2</div>
-                     <i class="fas fa-crown text-4xl text-amber-500 mb-4"></i>
-                    <h3 class="text-xl font-semibold mb-2">Choose Category & Format</h3>
+                     <i class="fas fa-crown text-4xl text-amber-500 mb-4"></i> <h3 class="text-xl font-semibold mb-2">Choose Category & Format</h3>
                     <p class="text-gray-600">Select Royal, Athletic, or Custom, and decide between Digital File or Framed Print.</p>
                 </div>
                  <div class="flex flex-col items-center fade-in" style="animation-delay: 0.3s;">
@@ -271,7 +304,7 @@
                     </div>
                     <p class="text-gray-600 italic">"Absolutely stunning! They captured my dog's goofy smile perfectly in the Athletic style. The quality is amazing!"</p>
                 </div>
-                 <div class="bg-gray-100 p-6 rounded-lg shadow-md testimonial-card">
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md testimonial-card">
                     <div class="flex items-center mb-4">
                         <img src="https://placehold.co/60x60/E0E0E0/757575?text=User+2" alt="Customer Avatar" class="w-12 h-12 rounded-full mr-4">
                         <div>
@@ -283,7 +316,7 @@
                     </div>
                     <p class="text-gray-600 italic">"Ordered the Royal portrait of my cat, Mittens, framed. My wife cried! The detail is incredible. Worth every penny."</p>
                 </div>
-                 <div class="bg-gray-100 p-6 rounded-lg shadow-md testimonial-card">
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md testimonial-card">
                     <div class="flex items-center mb-4">
                         <img src="https://placehold.co/60x60/E0E0E0/757575?text=User+3" alt="Customer Avatar" class="w-12 h-12 rounded-full mr-4">
                         <div>
@@ -300,28 +333,50 @@
 
     <section id="order" class="py-20 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6">
         <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-6">Ready to Immortalize Your Pet?</h2>
+             <h2 class="text-4xl font-bold mb-6">Ready to Create Your Pet's Masterpiece?</h2>
             <p class="text-lg mb-10 max-w-xl mx-auto">Give the most unique and heartfelt gift, or treat yourself to a beautiful reminder of your furry family member.</p>
 
             <div class="bg-white p-8 rounded-lg shadow-xl max-w-3xl mx-auto text-gray-800">
                  <form id="multi-step-order-form">
                     <div id="step-1" class="form-step active">
                         <h3 class="text-2xl font-semibold mb-6 text-center">Step 1: Your Info & Pet Photo</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1 text-left">Your Name</label>
-                                <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:border-amber-500" placeholder="Enter your name">
-                             </div>
-                             <div>
+
+                        <div class="mb-4">
+                             <label for="name" class="block text-sm font-medium text-gray-700 mb-1 text-left">Your Name</label>
+                             <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:border-amber-500" placeholder="Enter your name">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2 text-left">Preferred Contact Method</label>
+                            <div id="contact-method-options">
+                                <input type="radio" name="contact_method" id="contact_email" value="email" required class="hidden" checked>
+                                <label for="contact_email" class="contact-method-label">
+                                    <i class="fas fa-envelope mr-2"></i> Email
+                                </label>
+                                <input type="radio" name="contact_method" id="contact_phone" value="phone" class="hidden">
+                                <label for="contact_phone" class="contact-method-label">
+                                     <i class="fas fa-phone mr-2"></i> Phone
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="contact-input-area" class="mb-4">
+                             <div id="email-input-container" class="contact-input-container active">
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1 text-left">Your Email</label>
                                 <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:border-amber-500" placeholder="Enter your email address">
                              </div>
+                             <div id="phone-input-container" class="contact-input-container">
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1 text-left">Your Phone Number</label>
+                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:border-amber-500" placeholder="e.g., 123-456-7890">
+                             </div>
                         </div>
+
                         <div class="mb-6">
                             <label for="photo" class="block text-sm font-medium text-gray-700 mb-1 text-left">Upload Pet Photo</label>
                             <input type="file" id="photo" name="photo" accept="image/*" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200 cursor-pointer">
                             <p class="text-xs text-gray-500 mt-1 text-left">Tip: Choose a clear, well-lit photo!</p>
                         </div>
+
                         <div class="text-right">
                             <button type="button" onclick="nextStep(1)" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-full shadow-lg cta-button">
                                 Next: Choose Category <i class="fas fa-arrow-right ml-2"></i>
@@ -412,7 +467,8 @@
                             <div class="text-gray-700 space-y-2">
                                 <div class="summary-line"><span>Category:</span> <strong id="summary-category">Not Selected</strong></div>
                                 <div class="summary-line"><span>Format:</span> <strong id="summary-format">Not Selected</strong></div>
-                                <div class="summary-line"><span>Size:</span> <strong id="summary-size">12x16 inches (Fixed)</strong></div> <div class="summary-line"><span>Base Price:</span> <strong id="summary-base-price">$0.00</strong></div>
+                                <div class="summary-line"><span>Size:</span> <strong id="summary-size">12x16 inches (Fixed)</strong></div>
+                                <div class="summary-line"><span>Base Price:</span> <strong id="summary-base-price">$0.00</strong></div>
                                 <div class="summary-line" id="summary-shipping-line" style="display: none;"> <span>Shipping:</span> <strong id="summary-shipping">$0.00</strong>
                                 </div>
                             </div>
@@ -453,7 +509,7 @@
                  <a href="#" class="hover:text-amber-400 px-3">Privacy Policy</a>
             </div>
              <div class="mb-4 text-xl">
-                <a href="#" class="hover:text-amber-400 mx-2"><i class="fab fa-facebook-f"></i></a>
+                 <a href="#" class="hover:text-amber-400 mx-2"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="hover:text-amber-400 mx-2"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="hover:text-amber-400 mx-2"><i class="fab fa-pinterest"></i></a>
             </div>
@@ -461,7 +517,8 @@
         </div>
     </footer>
 
-    <div id="imageModal" class="modal" onclick="closeModal()"> <span class="close-button" onclick="closeModal()">&times;</span>
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close-button" onclick="closeModal()">&times;</span>
         <img class="modal-content" id="modalImage" src="" alt="Pawsterpiece Gallery Image" onclick="event.stopPropagation()"> </div>
 
     <script>
@@ -474,19 +531,20 @@
 
         function openModal(imgSrc) {
             if (modal && modalImg) {
-                modal.style.display = "flex";
+                modal.style.display = "flex"; // Use flex to center
                 modalImg.src = imgSrc;
-                document.body.style.overflow = 'hidden';
+                document.body.style.overflow = 'hidden'; // Prevent background scroll
             }
         }
 
         function closeModal() {
              if (modal) {
                 modal.style.display = "none";
-                document.body.style.overflow = 'auto';
+                document.body.style.overflow = 'auto'; // Restore background scroll
             }
         }
 
+        // Close modal on Escape key press
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape" && modal && modal.style.display === "flex") {
                 closeModal();
@@ -495,112 +553,174 @@
 
         // --- Multi-Step Form Logic ---
         let currentStep = 1;
-        const totalSteps = 4; // Updated total steps (removed size step)
+        const totalSteps = 4; // Total number of steps
         const formSteps = document.querySelectorAll('.form-step');
         const multiStepForm = document.getElementById('multi-step-order-form');
 
-        // Pricing data (Updated)
+        // Contact Method Elements
+        const contactMethodRadios = document.querySelectorAll('input[name="contact_method"]');
+        const emailInputContainer = document.getElementById('email-input-container');
+        const phoneInputContainer = document.getElementById('phone-input-container');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+
+        // Pricing data
         const prices = {
             digital: 20,
             framed: 45,
             shipping: 12.99
-            // Add category variations if they affect price
+            // Add category price modifiers here if needed, e.g., category: { royal: 10, athletic: 5, custom: 0 }
         };
 
+        // Function to display the correct step
         function showStep(stepNumber) {
-            formSteps.forEach(step => step.classList.remove('active'));
+            formSteps.forEach(step => step.classList.remove('active')); // Hide all steps
             const nextStepElement = document.getElementById(`step-${stepNumber}`);
             if (nextStepElement) {
-                nextStepElement.classList.add('active');
+                nextStepElement.classList.add('active'); // Show the target step
                 currentStep = stepNumber;
-                // Scroll to the top of the form when changing steps
+                // Scroll to the top of the form when changing steps for better UX
                 multiStepForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            // Update summary when reaching the final step (now step 4)
-            if (stepNumber === 4) {
+            // Update the summary automatically when reaching the final step
+            if (stepNumber === totalSteps) { // Check against totalSteps
                 updateSummary();
             }
         }
 
+        // Function to move to the next step after validation
         function nextStep(step) {
-            if (validateStep(step)) {
+            if (validateStep(step)) { // Only proceed if current step is valid
                  if (step < totalSteps) {
                     showStep(step + 1);
                  }
             }
         }
 
+        // Function to move to the previous step
         function prevStep(step) {
              if (step > 1) {
                 showStep(step - 1);
             }
         }
 
-        // Removed updateSizeOptions function as size is fixed
+        // Function to toggle contact input fields based on radio selection
+        function toggleContactInput(method) {
+            if (method === 'email') {
+                emailInputContainer.classList.add('active');    // Show email input
+                phoneInputContainer.classList.remove('active'); // Hide phone input
+                emailInput.required = true;  // Make email required
+                phoneInput.required = false; // Make phone not required
+                phoneInput.value = '';       // Clear phone input value
+            } else if (method === 'phone') {
+                phoneInputContainer.classList.add('active');    // Show phone input
+                emailInputContainer.classList.remove('active'); // Hide email input
+                phoneInput.required = true;  // Make phone required
+                emailInput.required = false; // Make email not required
+                emailInput.value = '';       // Clear email input value
+            }
+        }
 
+        // Add event listeners for contact method radio button changes
+        contactMethodRadios.forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                toggleContactInput(event.target.value);
+            });
+        });
+
+        // Function to validate the current step's required fields
         function validateStep(step) {
             const currentStepElement = document.getElementById(`step-${step}`);
-            if (!currentStepElement) return false;
+            if (!currentStepElement) return false; // Should not happen
 
             let isValid = true;
-            // Clear previous errors
+            // Clear previous error styles
             currentStepElement.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
             currentStepElement.querySelectorAll('.radio-group-invalid').forEach(el => el.classList.remove('radio-group-invalid'));
 
+            // Find all required inputs within the current step
             const requiredInputs = currentStepElement.querySelectorAll('[required]');
 
             requiredInputs.forEach(input => {
+                // Skip validation for inputs inside inactive containers (like the hidden contact method)
+                const parentContainer = input.closest('.contact-input-container');
+                 if (parentContainer && !parentContainer.classList.contains('active')) {
+                    return; // Skip this input
+                }
+
                 let fieldValid = true;
+                // Check different input types
                 if (input.type === 'radio') {
                     const groupName = input.name;
-                    const groupContainer = input.closest('div.grid') || input.closest('div');
+                    // Check if any radio button in the group is checked
                     if (!currentStepElement.querySelector(`input[name="${groupName}"]:checked`)) {
                         fieldValid = false;
+                        // Add error style to the container of the radio group for visual feedback
+                        const groupContainer = input.closest('div.grid, div#contact-method-options'); // Find the container
                         if (groupContainer) {
                             groupContainer.classList.add('radio-group-invalid');
                         }
                         console.error(`Validation failed for radio group: ${groupName}`);
                     }
                 } else if (input.type === 'file') {
+                    // Check if a file has been selected
                     if (input.files.length === 0) {
                         fieldValid = false;
                     }
-                } else { // Text, email, etc.
+                } else { // Text, email, tel etc.
+                    // Check if the input value is empty after trimming whitespace
                     if (!input.value.trim()) {
                          fieldValid = false;
                     }
+                    // Basic email format check (if it's an email input and has a value)
+                    if (input.type === 'email' && input.value.trim() && !/\S+@\S+\.\S+/.test(input.value)) {
+                        fieldValid = false;
+                        console.error(`Invalid email format for: ${input.id}`);
+                    }
+                    // Basic phone format check (example - allows digits, spaces, dashes, parens)
+                    if (input.type === 'tel' && input.value.trim() && !/^[0-9\s\-\(\)+]+$/.test(input.value)) {
+                        // You might want stricter phone validation depending on requirements
+                        // fieldValid = false; // Uncomment for stricter validation
+                        console.warn(`Potentially invalid phone format for: ${input.id}`);
+                    }
                 }
 
+                // If the field is not valid, mark it and set the overall step validity to false
                 if (!fieldValid) {
                     isValid = false;
-                    const label = input.closest('label') || currentStepElement.querySelector(`label[for="${input.id}"]`);
-                    if (label && input.type !== 'radio') {
-                        label.classList.add('border-red-500');
-                    }
-                    if(input.tagName === 'INPUT' && input.type !== 'radio') {
+                    // Add error border to the input itself (except radios)
+                     if (input.tagName === 'INPUT' && input.type !== 'radio') {
                        input.classList.add('border-red-500');
                     }
-                     console.error(`Validation failed for input: ${input.name || input.id}`);
+                    // Optionally add error style to the label as well
+                    const label = input.closest('label') || currentStepElement.querySelector(`label[for="${input.id}"]`);
+                     if (label && input.type !== 'radio') { // Don't highlight individual radio labels
+                        label.classList.add('border-red-500');
+                    }
+                    console.error(`Validation failed for input: ${input.name || input.id}`);
                 }
             });
 
+            // Alert the user if validation fails
              if (!isValid) {
-                alert('Please fill in all required fields for this step.');
+                alert('Please fill in all required fields correctly for this step.');
             }
-            return isValid;
+            return isValid; // Return true if all required fields are valid, false otherwise
         }
 
+        // Function to update the order summary display
         function updateSummary() {
             const formData = new FormData(multiStepForm);
             const selectedCategory = formData.get('category') || 'Not Selected';
             const selectedFormat = formData.get('format') || 'Not Selected';
 
-            // Capitalize helper function
+            // Helper function to capitalize first letter
             const capitalize = (s) => s && s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 
+            // Update summary text fields
             document.getElementById('summary-category').textContent = capitalize(selectedCategory);
             document.getElementById('summary-format').textContent = capitalize(selectedFormat);
-            // Size is now fixed
+            // Size is fixed, display depends on format
             document.getElementById('summary-size').textContent = (selectedFormat === 'framed') ? '12x16 inches (Fixed)' : 'N/A (Digital File)';
 
             // Calculate Price
@@ -608,28 +728,32 @@
             let shippingCost = 0;
             let totalPrice = 0;
 
+            // Determine base price based on format
             if (selectedFormat === 'digital') {
                 basePrice = prices.digital;
                 shippingCost = 0; // No shipping for digital
                 document.getElementById('summary-shipping-line').style.display = 'none'; // Hide shipping line
             } else if (selectedFormat === 'framed') {
                 basePrice = prices.framed;
-                shippingCost = prices.shipping;
+                shippingCost = prices.shipping; // Add shipping for framed
                 document.getElementById('summary-shipping-line').style.display = 'flex'; // Show shipping line
             }
+            // Add category price modifiers here if needed
+            // Example: if (prices.category && prices.category[selectedCategory]) { basePrice += prices.category[selectedCategory]; }
 
-            totalPrice = basePrice + shippingCost;
+            totalPrice = basePrice + shippingCost; // Calculate total
 
-            // Update summary display
+            // Update summary price fields
             document.getElementById('summary-base-price').textContent = `$${basePrice.toFixed(2)}`;
             document.getElementById('summary-shipping').textContent = `$${shippingCost.toFixed(2)}`;
             document.getElementById('summary-total-price').textContent = `$${totalPrice.toFixed(2)}`;
         }
 
-        // Add event listeners to update summary dynamically
+        // Add event listeners to update summary dynamically when relevant selections change
          document.querySelectorAll('#step-2 input, #step-3 input').forEach(input => {
              input.addEventListener('change', () => {
-                 if (currentStep === 4) { // Only update summary if user is viewing it (now step 4)
+                 // Only update the summary if the user is currently viewing the summary step
+                 if (currentStep === totalSteps) {
                      updateSummary();
                  }
              });
@@ -639,20 +763,26 @@
         // Handle Final Form Submission
         if (multiStepForm) {
             multiStepForm.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent actual form submission
+                event.preventDefault(); // Prevent default form submission
 
-                 if (!validateStep(totalSteps)) { // Validate the final step (now step 4)
-                    return;
+                 // Validate the final step before proceeding
+                 if (!validateStep(totalSteps)) {
+                    return; // Stop submission if validation fails
                 }
 
                 console.log('Final Form Submit Triggered!');
-                const formData = new FormData(multiStepForm);
-                const selectedFormat = formData.get('format'); // Get format for alert
+                const formData = new FormData(multiStepForm); // Get all form data
 
-                // Log collected data (replace with actual submission logic)
+                // Extract relevant data for logging/processing
+                const selectedFormat = formData.get('format');
+                const contactMethod = formData.get('contact_method');
+                const contactValue = contactMethod === 'email' ? formData.get('email') : formData.get('phone');
+
+                // Log collected data (replace with actual submission logic, e.g., AJAX request)
                 console.log('--- Order Details ---');
                 console.log('Name:', formData.get('name'));
-                console.log('Email:', formData.get('email'));
+                console.log('Contact Method:', contactMethod);
+                console.log('Contact Info:', contactValue);
                 console.log('Photo:', formData.get('photo') ? formData.get('photo').name : 'No file selected');
                 console.log('Category:', formData.get('category'));
                 console.log('Format:', selectedFormat);
@@ -660,18 +790,20 @@
                 console.log('Estimated Total:', document.getElementById('summary-total-price').textContent);
                 console.log('---------------------');
 
-                // Simulate submission success
-                alert(`Thank you, ${formData.get('name')}! Your Pawsterpiece order details have been received. We will contact you regarding payment and the preview process shortly. Summary: Category - ${formData.get('category')}, Format - ${selectedFormat}, Size - ${selectedFormat === 'framed' ? '12x16 inches' : 'N/A'}. Total: ${document.getElementById('summary-total-price').textContent}`);
+                // Simulate submission success - show confirmation to user
+                alert(`Thank you, ${formData.get('name')}! Your Pawsterpiece order details have been received. We will contact you via ${contactMethod} (${contactValue}) regarding payment and the preview process shortly. Summary: Category - ${formData.get('category')}, Format - ${selectedFormat}. Total: ${document.getElementById('summary-total-price').textContent}`);
 
-                // Optional: Reset form or redirect
-                 multiStepForm.reset();
-                 showStep(1); // Go back to the first step
+                // Reset the form and go back to the first step
+                 multiStepForm.reset(); // Clear all form fields
+                 toggleContactInput('email'); // Reset contact input display to email default
+                 showStep(1); // Show the first step again
             });
         }
 
-        // Initialize the first step on page load
+        // Initialize the form on page load
         document.addEventListener('DOMContentLoaded', () => {
-            showStep(1);
+            toggleContactInput('email'); // Ensure email input is shown by default
+            showStep(1); // Display the first step
         });
 
     </script>
