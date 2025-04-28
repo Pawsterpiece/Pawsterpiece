@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pawsterpiece - Turn Your Pet Photo into Art</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%; /* More responsive */
+            max-width: 600px; /* Allow slightly larger modal */
+            border-radius: 0.5rem;
+            position: relative;
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+        }
+        .step-number {
+            background-color: #fbbf24; /* Amber-400 */
+            color: #1f2937; /* Gray-800 */
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.125rem; /* text-lg */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .cta-button {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .testimonial-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        /* Styles for form steps */
+        .form-step {
+            display: none; /* Hide all steps initially */
+            animation: stepFadeIn 0.5s ease-in-out;
+        }
+        .form-step.active {
+            display: block; /* Show active step */
+        }
+        @keyframes stepFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        /* Style for selected options */
+        input[type="radio"]:checked + label.option-label { /* Be more specific */
+            border-color: #fbbf24; /* Amber-400 */
+            background-color: #fffbeb; /* Amber-50 */
+            box-shadow: 0 0 0 2px #fbbf24;
+        }
+        /* Style for option cards */
+        .option-label {
+            border: 2px solid #e5e7eb; /* Gray-200 */
+            padding: 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-align: center;
+            height: 100%; /* Ensure labels in a grid row have same height */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes price down */
+        }
+        .option-label:hover {
+             border-color: #d1d5db; /* Gray-300 */
+             background-color: #f9fafb; /* Gray-50 */
+        }
+        .option-label img {
+            max-height: 80px;
+            margin-bottom: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            object-fit: contain; /* Prevent image stretching */
+        }
+        .option-label .option-content {
+             flex-grow: 1; /* Allow content to take up space */
+        }
+        .option-label .option-price {
+             font-weight: bold;
+             color: #ca8a04; /* amber-600 */
+             margin-top: 0.5rem; /* Add some space above price */
+        }
+        .price-display {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #1f2937; /* Gray-800 */
+            margin-top: 1rem;
+            text-align: right;
+        }
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 0.5rem; /* pb-2 */
+            margin-bottom: 0.5rem; /* mb-2 */
+            border-bottom: 1px dashed #e5e7eb; /* border-b border-dashed border-gray-200 */
+        }
+        .summary-line:last-child {
+             border-bottom: none;
+             padding-bottom: 0;
+             margin-bottom: 0;
+        }
+        .summary-total {
+             border-top: 1px solid #d1d5db; /* border-t border-gray-300 */
+             padding-top: 0.75rem; /* pt-3 */
+             margin-top: 0.75rem; /* mt-3 */
+        }
+         /* Input validation error style */
+        input.border-red-500,
+        label.border-red-500 { /* Style label if radio/checkbox invalid */
+            border-color: #ef4444; /* Red-500 */
+        }
+        .radio-group-invalid .option-label { /* Style all labels in group if none selected */
+             border-color: #ef4444;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-amber-500">Pawsterpiece</a>
+            <div>
+                <a href="#how-it-works" class="text-gray-600 hover:text-amber-500 px-3 py-2 rounded-md text-sm font-medium">How It Works</a>
+                <a href="#gallery" class="text-gray-600 hover:text-amber-500 px-3 py-2 rounded-md text-sm font-medium">Gallery</a>
+                <a href="#reviews" class="text-gray-600 hover:text-amber-500 px-3 py-2 rounded-md text-sm font-medium">Reviews</a>
+                <a href="#order" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow cta-button ml-2">Create Yours Now</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="bg-gradient-to-r from-amber-100 via-orange-50 to-white py-20 px-6 fade-in">
+        <div class="container mx-auto flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4 leading-tight">
+                    Your Pet's Personality, <span class="text-amber-600">Captured in Art.</span>
+                </h1>
+                <p class="text-lg text-gray-600 mb-8">
+                    Transform your favorite pet photo into a stunning, hand-crafted portrait. Choose from Royal, Athletic, or Custom styles, delivered digitally or framed (12x16 inches)!
+                </p>
+                <a href="#order" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg cta-button inline-block">
+                    Get Started <i class="fas fa-paw ml-2"></i>
+                </a>
+                 <p class="text-sm text-gray-500 mt-4">Fast Turnaround & 100% Satisfaction Guarantee!</p>
+            </div>
+            <div class="md:w-1/2 flex justify-center items-center">
+                 <img src="https://placehold.co/500x500/FFF0DB/DB7C26?text=Amazing+Pet+Portrait+Example" alt="Example Custom Pet Portrait" class="rounded-lg shadow-2xl max-w-sm md:max-w-md w-full">
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="py-16 bg-white px-6">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-2 text-gray-800">Creating Your Pawsterpiece is Easy!</h2>
+            <p class="text-gray-600 mb-12 max-w-2xl mx-auto">Follow these simple steps to get a unique portrait of your beloved pet.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                 <div class="flex flex-col items-center fade-in" style="animation-delay: 0.1s;">
+                    <div class="step-number">1</div>
+                    <i class="fas fa-camera text-4xl text-amber-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Upload Photo & Info</h3>
+                    <p class="text-gray-600">Provide your details and choose your favorite high-quality photo of your pet.</p>
+                </div>
+                 <div class="flex flex-col items-center fade-in" style="animation-delay: 0.2s;">
+                    <div class="step-number">2</div>
+                     <i class="fas fa-crown text-4xl text-amber-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Choose Category & Format</h3>
+                    <p class="text-gray-600">Select Royal, Athletic, or Custom, and decide between Digital File or Framed Print.</p>
+                </div>
+                 <div class="flex flex-col items-center fade-in" style="animation-delay: 0.3s;">
+                     <div class="step-number">3</div>
+                     <i class="fas fa-check-circle text-4xl text-amber-500 mb-4"></i> <h3 class="text-xl font-semibold mb-2">Review & Confirm</h3>
+                    <p class="text-gray-600">Check your selections and estimated total before proceeding.</p>
+                </div>
+            </div>
+             <p class="mt-10 text-gray-600">Then, approve your preview and receive your masterpiece!</p>
+        </div>
+    </section>
+
+    <section id="gallery" class="py-16 bg-amber-50 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">See Our Happy Pawsterpieces</h2>
+            <div class="gallery-grid">
+                <img src="https://placehold.co/400x400/FFF0DB/DB7C26?text=Royal+Dog" alt="Custom Royal Dog Portrait" class="rounded-lg shadow-md w-full h-auto object-cover aspect-square hover:opacity-90 transition-opacity cursor-pointer" onclick="openModal(this.src)">
+                <img src="https://placehold.co/400x400/FFF0DB/DB7C26?text=Athletic+Cat" alt="Custom Athletic Cat Portrait" class="rounded-lg shadow-md w-full h-auto object-cover aspect-square hover:opacity-90 transition-opacity cursor-pointer" onclick="openModal(this.src)">
+                <img src="https://placehold.co/400x400/FFF0DB/DB7C26?text=Custom+Style+Dog" alt="Custom Style Dog Portrait" class="rounded-lg shadow-md w-full h-auto object-cover aspect-square hover:opacity-90 transition-opacity cursor-pointer" onclick="openModal(this.src)">
+                <img src="https://placehold.co/400x400/FFF0DB/DB7C26?text=Framed+Portrait+(12x16)" alt="Framed Pet Portrait (12x16)" class="rounded-lg shadow-md w-full h-auto object-cover aspect-square hover:opacity-90 transition-opacity cursor-pointer" onclick="openModal(this.src)">
+                 <img src="https://placehold.co/400x400/FFF0DB/DB7C26?text=Digital+Portrait+Example" alt="Digital Pet Portrait Example" class="rounded-lg shadow-md w-full h-auto object-cover aspect-square hover:opacity-90 transition-opacity cursor-pointer" onclick="openModal(this.src)">
+                 <img src="https://placehold.co/400x400/FFF0DB/DB7C26?text=Another+Happy+Pet" alt="Another Custom Pet Portrait" class="rounded-lg shadow-md w-full h-auto object-cover aspect-square hover:opacity-90 transition-opacity cursor-pointer" onclick="openModal(this.src)">
+            </div>
+             <div class="text-center mt-12">
+                <a href="#order" class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-8 rounded-full text-lg shadow cta-button inline-block">
+                    Create Your Pawsterpiece Now
+                </a>
+            </div>
+        </div>
+    </section>
+
+     <section id="reviews" class="py-16 bg-white px-6">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Hear From Our Happy Pet Parents</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <img src="https://placehold.co/60x60/E0E0E0/757575?text=User+1" alt="Customer Avatar" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <p class="font-semibold text-gray-800">Sarah K.</p>
+                            <div class="text-amber-500">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">"Absolutely stunning! They captured my dog's goofy smile perfectly in the Athletic style. The quality is amazing!"</p>
+                </div>
+                 <div class="bg-gray-100 p-6 rounded-lg shadow-md testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <img src="https://placehold.co/60x60/E0E0E0/757575?text=User+2" alt="Customer Avatar" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <p class="font-semibold text-gray-800">Mike R.</p>
+                            <div class="text-amber-500">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">"Ordered the Royal portrait of my cat, Mittens, framed. My wife cried! The detail is incredible. Worth every penny."</p>
+                </div>
+                 <div class="bg-gray-100 p-6 rounded-lg shadow-md testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <img src="https://placehold.co/60x60/E0E0E0/757575?text=User+3" alt="Customer Avatar" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <p class="font-semibold text-gray-800">Jessica L.</p>
+                            <div class="text-amber-500">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">"Got the digital custom style. Process was simple, customer service fantastic. The final artwork exceeded expectations."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="order" class="py-20 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-6">Ready to Immortalize Your Pet?</h2>
+            <p class="text-lg mb-10 max-w-xl mx-auto">Give the most unique and heartfelt gift, or treat yourself to a beautiful reminder of your furry family member.</p>
+
+            <div class="bg-white p-8 rounded-lg shadow-xl max-w-3xl mx-auto text-gray-800">
+                 <form id="multi-step-order-form">
+                    <div id="step-1" class="form-step active">
+                        <h3 class="text-2xl font-semibold mb-6 text-center">Step 1: Your Info & Pet Photo</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                             <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1 text-left">Your Name</label>
+                                <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:border-amber-500" placeholder="Enter your name">
+                             </div>
+                             <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1 text-left">Your Email</label>
+                                <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:border-amber-500" placeholder="Enter your email address">
+                             </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="photo" class="block text-sm font-medium text-gray-700 mb-1 text-left">Upload Pet Photo</label>
+                            <input type="file" id="photo" name="photo" accept="image/*" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200 cursor-pointer">
+                            <p class="text-xs text-gray-500 mt-1 text-left">Tip: Choose a clear, well-lit photo!</p>
+                        </div>
+                        <div class="text-right">
+                            <button type="button" onclick="nextStep(1)" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-full shadow-lg cta-button">
+                                Next: Choose Category <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="step-2" class="form-step">
+                        <h3 class="text-2xl font-semibold mb-6 text-center">Step 2: Choose Your Category</h3>
+                        <div id="category-options" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div>
+                                <input type="radio" name="category" id="category-royal" value="royal" required class="hidden">
+                                <label for="category-royal" class="option-label block">
+                                    <img src="https://placehold.co/150x100/FFFBEB/F59E0B?text=Royal+Style" alt="Royal Style">
+                                    <div class="option-content">
+                                        <span class="font-semibold block">Royal</span>
+                                        <span class="text-sm text-gray-500 block">Regal & Majestic</span>
+                                    </div>
+                                </label>
+                            </div>
+                             <div>
+                                <input type="radio" name="category" id="category-athletic" value="athletic" class="hidden">
+                                <label for="category-athletic" class="option-label block">
+                                     <img src="https://placehold.co/150x100/EFF6FF/3B82F6?text=Athletic+Style" alt="Athletic Style">
+                                     <div class="option-content">
+                                         <span class="font-semibold block">Athletic</span>
+                                         <span class="text-sm text-gray-500 block">Sporty & Action-Packed</span>
+                                     </div>
+                                </label>
+                            </div>
+                             <div>
+                                <input type="radio" name="category" id="category-custom" value="custom" class="hidden">
+                                <label for="category-custom" class="option-label block">
+                                     <img src="https://placehold.co/150x100/F3F4F6/6B7280?text=Custom+Style" alt="Custom Style">
+                                     <div class="option-content">
+                                         <span class="font-semibold block">Custom</span>
+                                         <span class="text-sm text-gray-500 block">Your Unique Vision</span>
+                                     </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                             <button type="button" onclick="prevStep(2)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-full shadow cta-button">
+                                <i class="fas fa-arrow-left mr-2"></i> Back
+                            </button>
+                            <button type="button" onclick="nextStep(2)" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-full shadow-lg cta-button">
+                                Next: Choose Format <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="step-3" class="form-step">
+                        <h3 class="text-2xl font-semibold mb-6 text-center">Step 3: Choose Your Format</h3>
+                         <div id="format-options" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <input type="radio" name="format" id="format-digital" value="digital" required class="hidden">
+                                <label for="format-digital" class="option-label block">
+                                    <img src="https://placehold.co/150x100/ECFEFF/06B6D4?text=Digital+File" alt="Digital File Format">
+                                    <div class="option-content">
+                                        <span class="font-semibold block">Digital File</span>
+                                        <span class="text-sm text-gray-500 block">High-res file via email</span>
+                                    </div>
+                                     <span class="option-price" data-price="20">$20</span> </label>
+                            </div>
+                             <div>
+                                <input type="radio" name="format" id="format-framed" value="framed" class="hidden">
+                                <label for="format-framed" class="option-label block">
+                                     <img src="https://placehold.co/150x100/FEF2F2/DC2626?text=Framed+Print" alt="Framed Print Format">
+                                     <div class="option-content">
+                                         <span class="font-semibold block">Framed Print</span>
+                                         <span class="text-sm text-gray-500 block">12x16" Ready-to-hang (Black Frame)</span> </div>
+                                     <span class="option-price" data-price="45">$45</span> </label>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                             <button type="button" onclick="prevStep(3)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-full shadow cta-button">
+                                <i class="fas fa-arrow-left mr-2"></i> Back
+                            </button>
+                            <button type="button" onclick="nextStep(3)" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-full shadow-lg cta-button">
+                                Next: Review Order <i class="fas fa-arrow-right ml-2"></i> </button>
+                        </div>
+                    </div>
+
+                     <div id="step-4" class="form-step">
+                        <h3 class="text-2xl font-semibold mb-6 text-center">Step 4: Review Your Order</h3>
+                        <div class="bg-amber-50 p-6 rounded-md mb-6">
+                            <h4 class="font-semibold text-lg mb-3 border-b pb-2 border-amber-200">Your Pawsterpiece Summary:</h4>
+                            <div class="text-gray-700 space-y-2">
+                                <div class="summary-line"><span>Category:</span> <strong id="summary-category">Not Selected</strong></div>
+                                <div class="summary-line"><span>Format:</span> <strong id="summary-format">Not Selected</strong></div>
+                                <div class="summary-line"><span>Size:</span> <strong id="summary-size">12x16 inches (Fixed)</strong></div> <div class="summary-line"><span>Base Price:</span> <strong id="summary-base-price">$0.00</strong></div>
+                                <div class="summary-line" id="summary-shipping-line" style="display: none;"> <span>Shipping:</span> <strong id="summary-shipping">$0.00</strong>
+                                </div>
+                            </div>
+                            <div class="price-display summary-total">
+                                Estimated Total: <span id="summary-total-price">$0.00</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-6 text-center">We'll send a preview for your approval before finalizing and shipping (if applicable).</p>
+
+                        <div class="flex justify-between items-center">
+                             <button type="button" onclick="prevStep(4)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-full shadow cta-button">
+                                <i class="fas fa-arrow-left mr-2"></i> Back
+                            </button>
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg cta-button">
+                                Confirm & Proceed to Payment <i class="fas fa-check-circle ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                 </form>
+            </div>
+
+             <div class="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-2 items-center">
+                 <span class="flex items-center"><i class="fas fa-check-circle mr-2"></i> 100% Satisfaction Guarantee</span>
+                 <span class="flex items-center"><i class="fas fa-lock mr-2"></i> Secure Process</span>
+                 <span class="flex items-center"><i class="fas fa-shipping-fast mr-2"></i> Fast Turnaround</span>
+                 <span class="flex items-center"><i class="fas fa-paint-brush mr-2"></i> Artist Preview Included</span>
+             </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-10 px-6">
+        <div class="container mx-auto text-center">
+            <div class="mb-4">
+                 <a href="#how-it-works" class="hover:text-amber-400 px-3">How It Works</a> |
+                 <a href="#" class="hover:text-amber-400 px-3">FAQ</a> |
+                 <a href="#" class="hover:text-amber-400 px-3">Contact Us</a> |
+                 <a href="#" class="hover:text-amber-400 px-3">Privacy Policy</a>
+            </div>
+             <div class="mb-4 text-xl">
+                <a href="#" class="hover:text-amber-400 mx-2"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="hover:text-amber-400 mx-2"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-amber-400 mx-2"><i class="fab fa-pinterest"></i></a>
+            </div>
+            <p class="text-sm">&copy; <span id="current-year"></span> Pawsterpiece. All Rights Reserved. Made with <i class="fas fa-heart text-amber-500"></i> for Pet Lovers.</p>
+        </div>
+    </footer>
+
+    <div id="imageModal" class="modal" onclick="closeModal()"> <span class="close-button" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage" src="" alt="Pawsterpiece Gallery Image" onclick="event.stopPropagation()"> </div>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // --- Image Modal Logic ---
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+
+        function openModal(imgSrc) {
+            if (modal && modalImg) {
+                modal.style.display = "flex";
+                modalImg.src = imgSrc;
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal() {
+             if (modal) {
+                modal.style.display = "none";
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape" && modal && modal.style.display === "flex") {
+                closeModal();
+            }
+        });
+
+        // --- Multi-Step Form Logic ---
+        let currentStep = 1;
+        const totalSteps = 4; // Updated total steps (removed size step)
+        const formSteps = document.querySelectorAll('.form-step');
+        const multiStepForm = document.getElementById('multi-step-order-form');
+
+        // Pricing data (Updated)
+        const prices = {
+            digital: 20,
+            framed: 45,
+            shipping: 12.99
+            // Add category variations if they affect price
+        };
+
+        function showStep(stepNumber) {
+            formSteps.forEach(step => step.classList.remove('active'));
+            const nextStepElement = document.getElementById(`step-${stepNumber}`);
+            if (nextStepElement) {
+                nextStepElement.classList.add('active');
+                currentStep = stepNumber;
+                // Scroll to the top of the form when changing steps
+                multiStepForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            // Update summary when reaching the final step (now step 4)
+            if (stepNumber === 4) {
+                updateSummary();
+            }
+        }
+
+        function nextStep(step) {
+            if (validateStep(step)) {
+                 if (step < totalSteps) {
+                    showStep(step + 1);
+                 }
+            }
+        }
+
+        function prevStep(step) {
+             if (step > 1) {
+                showStep(step - 1);
+            }
+        }
+
+        // Removed updateSizeOptions function as size is fixed
+
+        function validateStep(step) {
+            const currentStepElement = document.getElementById(`step-${step}`);
+            if (!currentStepElement) return false;
+
+            let isValid = true;
+            // Clear previous errors
+            currentStepElement.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
+            currentStepElement.querySelectorAll('.radio-group-invalid').forEach(el => el.classList.remove('radio-group-invalid'));
+
+            const requiredInputs = currentStepElement.querySelectorAll('[required]');
+
+            requiredInputs.forEach(input => {
+                let fieldValid = true;
+                if (input.type === 'radio') {
+                    const groupName = input.name;
+                    const groupContainer = input.closest('div.grid') || input.closest('div');
+                    if (!currentStepElement.querySelector(`input[name="${groupName}"]:checked`)) {
+                        fieldValid = false;
+                        if (groupContainer) {
+                            groupContainer.classList.add('radio-group-invalid');
+                        }
+                        console.error(`Validation failed for radio group: ${groupName}`);
+                    }
+                } else if (input.type === 'file') {
+                    if (input.files.length === 0) {
+                        fieldValid = false;
+                    }
+                } else { // Text, email, etc.
+                    if (!input.value.trim()) {
+                         fieldValid = false;
+                    }
+                }
+
+                if (!fieldValid) {
+                    isValid = false;
+                    const label = input.closest('label') || currentStepElement.querySelector(`label[for="${input.id}"]`);
+                    if (label && input.type !== 'radio') {
+                        label.classList.add('border-red-500');
+                    }
+                    if(input.tagName === 'INPUT' && input.type !== 'radio') {
+                       input.classList.add('border-red-500');
+                    }
+                     console.error(`Validation failed for input: ${input.name || input.id}`);
+                }
+            });
+
+             if (!isValid) {
+                alert('Please fill in all required fields for this step.');
+            }
+            return isValid;
+        }
+
+        function updateSummary() {
+            const formData = new FormData(multiStepForm);
+            const selectedCategory = formData.get('category') || 'Not Selected';
+            const selectedFormat = formData.get('format') || 'Not Selected';
+
+            // Capitalize helper function
+            const capitalize = (s) => s && s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+
+            document.getElementById('summary-category').textContent = capitalize(selectedCategory);
+            document.getElementById('summary-format').textContent = capitalize(selectedFormat);
+            // Size is now fixed
+            document.getElementById('summary-size').textContent = (selectedFormat === 'framed') ? '12x16 inches (Fixed)' : 'N/A (Digital File)';
+
+            // Calculate Price
+            let basePrice = 0;
+            let shippingCost = 0;
+            let totalPrice = 0;
+
+            if (selectedFormat === 'digital') {
+                basePrice = prices.digital;
+                shippingCost = 0; // No shipping for digital
+                document.getElementById('summary-shipping-line').style.display = 'none'; // Hide shipping line
+            } else if (selectedFormat === 'framed') {
+                basePrice = prices.framed;
+                shippingCost = prices.shipping;
+                document.getElementById('summary-shipping-line').style.display = 'flex'; // Show shipping line
+            }
+
+            totalPrice = basePrice + shippingCost;
+
+            // Update summary display
+            document.getElementById('summary-base-price').textContent = `$${basePrice.toFixed(2)}`;
+            document.getElementById('summary-shipping').textContent = `$${shippingCost.toFixed(2)}`;
+            document.getElementById('summary-total-price').textContent = `$${totalPrice.toFixed(2)}`;
+        }
+
+        // Add event listeners to update summary dynamically
+         document.querySelectorAll('#step-2 input, #step-3 input').forEach(input => {
+             input.addEventListener('change', () => {
+                 if (currentStep === 4) { // Only update summary if user is viewing it (now step 4)
+                     updateSummary();
+                 }
+             });
+         });
+
+
+        // Handle Final Form Submission
+        if (multiStepForm) {
+            multiStepForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent actual form submission
+
+                 if (!validateStep(totalSteps)) { // Validate the final step (now step 4)
+                    return;
+                }
+
+                console.log('Final Form Submit Triggered!');
+                const formData = new FormData(multiStepForm);
+                const selectedFormat = formData.get('format'); // Get format for alert
+
+                // Log collected data (replace with actual submission logic)
+                console.log('--- Order Details ---');
+                console.log('Name:', formData.get('name'));
+                console.log('Email:', formData.get('email'));
+                console.log('Photo:', formData.get('photo') ? formData.get('photo').name : 'No file selected');
+                console.log('Category:', formData.get('category'));
+                console.log('Format:', selectedFormat);
+                console.log('Size:', selectedFormat === 'framed' ? '12x16 inches' : 'N/A'); // Log fixed size or N/A
+                console.log('Estimated Total:', document.getElementById('summary-total-price').textContent);
+                console.log('---------------------');
+
+                // Simulate submission success
+                alert(`Thank you, ${formData.get('name')}! Your Pawsterpiece order details have been received. We will contact you regarding payment and the preview process shortly. Summary: Category - ${formData.get('category')}, Format - ${selectedFormat}, Size - ${selectedFormat === 'framed' ? '12x16 inches' : 'N/A'}. Total: ${document.getElementById('summary-total-price').textContent}`);
+
+                // Optional: Reset form or redirect
+                 multiStepForm.reset();
+                 showStep(1); // Go back to the first step
+            });
+        }
+
+        // Initialize the first step on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            showStep(1);
+        });
+
+    </script>
+
+</body>
+</html>
