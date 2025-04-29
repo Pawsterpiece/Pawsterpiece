@@ -100,6 +100,8 @@
         .form-step {
             display: none; /* Hide all steps initially */
             animation: stepFadeIn 0.5s ease-in-out;
+            min-height: 350px; /* Ensure steps have height */
+            padding-bottom: 1rem;
         }
         .form-step.active {
             display: block; /* Show active step */
@@ -204,7 +206,7 @@
         }
         /* Style radio group container when invalid */
         .radio-group-invalid .option-label,
-        .radio-group-invalid .contact-method-label {
+        .radio-group-invalid .contact-method-label { /* Apply to contact method labels too */
              border-color: #ef4444 !important; /* Red-500 */
         }
     </style>
@@ -297,35 +299,36 @@
                         <img src="https://placehold.co/60x60/E0E0E0/757575?text=User+1" alt="Customer Avatar" class="w-12 h-12 rounded-full mr-4">
                         <div>
                             <p class="font-semibold text-gray-800">Sarah K.</p>
-                            <div class="text-amber-500">
+                            <div class="rating-stars text-amber-500">
                                 <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                             </div>
                         </div>
                     </div>
-                    <p class="text-gray-600 italic">"Absolutely stunning! They captured my dog's goofy smile perfectly in the Athletic style. The quality is amazing!"</p>
-                </div>
+                    <p class="testimonial-quote">"Absolutely stunning! They captured my dog's goofy smile perfectly in the Athletic style. The quality is amazing!"</p>
+                     </div>
                 <div class="bg-gray-100 p-6 rounded-lg shadow-md testimonial-card">
                     <div class="flex items-center mb-4">
                         <img src="https://placehold.co/60x60/E0E0E0/757575?text=User+2" alt="Customer Avatar" class="w-12 h-12 rounded-full mr-4">
                         <div>
                             <p class="font-semibold text-gray-800">Mike R.</p>
-                            <div class="text-amber-500">
+                           <div class="rating-stars text-amber-500">
                                 <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                             </div>
                         </div>
                     </div>
-                    <p class="text-gray-600 italic">"Ordered the Royal portrait of my cat, Mittens, framed. My wife cried! The detail is incredible. Worth every penny."</p>
+                    <p class="testimonial-quote">"Ordered the Royal portrait of my cat, Mittens, framed. My wife cried! The detail is incredible. Worth every penny."</p>
                 </div>
                 <div class="bg-gray-100 p-6 rounded-lg shadow-md testimonial-card">
                     <div class="flex items-center mb-4">
                         <img src="https://placehold.co/60x60/E0E0E0/757575?text=User+3" alt="Customer Avatar" class="w-12 h-12 rounded-full mr-4">
                         <div>
                             <p class="font-semibold text-gray-800">Jessica L.</p>
-                            <div class="text-amber-500">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> </div>
+                           <div class="rating-stars text-amber-500">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
                         </div>
                     </div>
-                    <p class="text-gray-600 italic">"Got the digital custom style. Process was simple, customer service fantastic. The final artwork exceeded expectations."</p>
+                    <p class="testimonial-quote">"Got the digital custom style. Process was simple, customer service fantastic. The final artwork exceeded expectations."</p>
                 </div>
             </div>
         </div>
@@ -339,13 +342,11 @@
             <div class="bg-white p-8 rounded-lg shadow-xl max-w-3xl mx-auto text-gray-800">
                  <form id="multi-step-order-form">
                     <div id="step-1" class="form-step active">
-                        <h3 class="text-2xl font-semibold mb-6 text-center">Step 1: Your Info & Pet Photo</h3>
-
+                        <h3 class="text-2xl font-semibold mb-6 text-center">Step 1: Your Info & Pet Photo(s)</h3>
                         <div class="mb-4">
                              <label for="name" class="block text-sm font-medium text-gray-700 mb-1 text-left">Your Name</label>
                              <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:border-amber-500" placeholder="Enter your name">
                         </div>
-
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2 text-left">Preferred Contact Method</label>
                             <div id="contact-method-options">
@@ -359,7 +360,6 @@
                                 </label>
                             </div>
                         </div>
-
                         <div id="contact-input-area" class="mb-4">
                              <div id="email-input-container" class="contact-input-container active">
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1 text-left">Your Email</label>
@@ -370,13 +370,11 @@
                                 <input type="tel" id="phone" name="phone" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:border-amber-500" placeholder="e.g., 123-456-7890">
                              </div>
                         </div>
-
                         <div class="mb-6">
-                            <label for="photo" class="block text-sm font-medium text-gray-700 mb-1 text-left">Upload Pet Photo</label>
-                            <input type="file" id="photo" name="photo" accept="image/*" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200 cursor-pointer">
-                            <p class="text-xs text-gray-500 mt-1 text-left">Tip: Choose a clear, well-lit photo!</p>
+                            <label for="photo" class="block text-sm font-medium text-gray-700 mb-1 text-left">Upload Pet Photos (Minimum 2)</label>
+                            <input type="file" id="photo" name="photo" accept="image/*" required multiple class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200 cursor-pointer">
+                            <p class="text-xs text-gray-500 mt-1 text-left">Tip: Choose clear, well-lit photos! Hold Ctrl/Cmd to select multiple.</p>
                         </div>
-
                         <div class="text-right">
                             <button type="button" onclick="nextStep(1)" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-full shadow-lg cta-button">
                                 Next: Choose Category <i class="fas fa-arrow-right ml-2"></i>
@@ -386,10 +384,10 @@
 
                     <div id="step-2" class="form-step">
                         <h3 class="text-2xl font-semibold mb-6 text-center">Step 2: Choose Your Category</h3>
-                        <div id="category-options" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div id="category-options" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 radio-group-container">
                             <div>
-                                <input type="radio" name="category" id="category-royal" value="royal" required class="hidden">
-                                <label for="category-royal" class="option-label block">
+                                <input type="radio" name="category" id="category-royal" value="royal" required class="hidden variant-input-hidden">
+                                <label for="category-royal" class="option-label option-label-card block">
                                     <img src="https://placehold.co/150x100/FFFBEB/F59E0B?text=Royal+Style" alt="Royal Style">
                                     <div class="option-content">
                                         <span class="font-semibold block">Royal</span>
@@ -398,8 +396,8 @@
                                 </label>
                             </div>
                              <div>
-                                <input type="radio" name="category" id="category-athletic" value="athletic" class="hidden">
-                                <label for="category-athletic" class="option-label block">
+                                <input type="radio" name="category" id="category-athletic" value="athletic" class="hidden variant-input-hidden">
+                                <label for="category-athletic" class="option-label option-label-card block">
                                      <img src="https://placehold.co/150x100/EFF6FF/3B82F6?text=Athletic+Style" alt="Athletic Style">
                                      <div class="option-content">
                                          <span class="font-semibold block">Athletic</span>
@@ -408,8 +406,8 @@
                                 </label>
                             </div>
                              <div>
-                                <input type="radio" name="category" id="category-custom" value="custom" class="hidden">
-                                <label for="category-custom" class="option-label block">
+                                <input type="radio" name="category" id="category-custom" value="custom" class="hidden variant-input-hidden">
+                                <label for="category-custom" class="option-label option-label-card block">
                                      <img src="https://placehold.co/150x100/F3F4F6/6B7280?text=Custom+Style" alt="Custom Style">
                                      <div class="option-content">
                                          <span class="font-semibold block">Custom</span>
@@ -430,10 +428,10 @@
 
                     <div id="step-3" class="form-step">
                         <h3 class="text-2xl font-semibold mb-6 text-center">Step 3: Choose Your Format</h3>
-                         <div id="format-options" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                         <div id="format-options" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 radio-group-container">
                             <div>
-                                <input type="radio" name="format" id="format-digital" value="digital" required class="hidden">
-                                <label for="format-digital" class="option-label block">
+                                <input type="radio" name="format" id="format-digital" value="digital" required class="hidden variant-input-hidden">
+                                <label for="format-digital" class="option-label option-label-card block">
                                     <img src="https://placehold.co/150x100/ECFEFF/06B6D4?text=Digital+File" alt="Digital File Format">
                                     <div class="option-content">
                                         <span class="font-semibold block">Digital File</span>
@@ -442,8 +440,8 @@
                                      <span class="option-price" data-price="20">$20</span> </label>
                             </div>
                              <div>
-                                <input type="radio" name="format" id="format-framed" value="framed" class="hidden">
-                                <label for="format-framed" class="option-label block">
+                                <input type="radio" name="format" id="format-framed" value="framed" class="hidden variant-input-hidden">
+                                <label for="format-framed" class="option-label option-label-card block">
                                      <img src="https://placehold.co/150x100/FEF2F2/DC2626?text=Framed+Print" alt="Framed Print Format">
                                      <div class="option-content">
                                          <span class="font-semibold block">Framed Print</span>
@@ -451,20 +449,21 @@
                                      <span class="option-price" data-price="45">$45</span> </label>
                             </div>
                         </div>
-                        <div class="flex justify-between">
+                         <div class="flex justify-between">
                              <button type="button" onclick="prevStep(3)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-full shadow cta-button">
                                 <i class="fas fa-arrow-left mr-2"></i> Back
                             </button>
                             <button type="button" onclick="nextStep(3)" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-full shadow-lg cta-button">
-                                Next: Review Order <i class="fas fa-arrow-right ml-2"></i> </button>
+                                Next: Review Order <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
                         </div>
                     </div>
 
                      <div id="step-4" class="form-step">
                         <h3 class="text-2xl font-semibold mb-6 text-center">Step 4: Review Your Order</h3>
-                        <div class="bg-amber-50 p-6 rounded-md mb-6">
+                        <div class="bg-amber-50 p-6 rounded-md mb-6 text-gray-800">
                             <h4 class="font-semibold text-lg mb-3 border-b pb-2 border-amber-200">Your Pawsterpiece Summary:</h4>
-                            <div class="text-gray-700 space-y-2">
+                            <div class="space-y-2">
                                 <div class="summary-line"><span>Category:</span> <strong id="summary-category">Not Selected</strong></div>
                                 <div class="summary-line"><span>Format:</span> <strong id="summary-format">Not Selected</strong></div>
                                 <div class="summary-line"><span>Size:</span> <strong id="summary-size">12x16 inches (Fixed)</strong></div>
@@ -553,9 +552,9 @@
 
         // --- Multi-Step Form Logic ---
         let currentStep = 1;
-        const totalSteps = 4; // Total number of steps
         const formSteps = document.querySelectorAll('.form-step');
         const multiStepForm = document.getElementById('multi-step-order-form');
+        const totalSteps = formSteps.length; // Calculate total steps
 
         // Contact Method Elements
         const contactMethodRadios = document.querySelectorAll('input[name="contact_method"]');
@@ -564,27 +563,26 @@
         const emailInput = document.getElementById('email');
         const phoneInput = document.getElementById('phone');
 
-        // Pricing data
+        // Pricing data (example)
         const prices = {
-            digital: 20,
-            framed: 45,
+            digital: 20, // Base price
+            framed: 45,  // Base price
             shipping: 12.99
-            // Add category price modifiers here if needed, e.g., category: { royal: 10, athletic: 5, custom: 0 }
+            // Add category modifiers if needed: category: { royal: 10, athletic: 0, custom: 5 }
         };
 
         // Function to display the correct step
         function showStep(stepNumber) {
-            formSteps.forEach(step => step.classList.remove('active')); // Hide all steps
-            const nextStepElement = document.getElementById(`step-${stepNumber}`);
-            if (nextStepElement) {
-                nextStepElement.classList.add('active'); // Show the target step
-                currentStep = stepNumber;
-                // Scroll to the top of the form when changing steps for better UX
-                multiStepForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            formSteps.forEach((step, index) => {
+                step.classList.toggle('active', (index + 1) === stepNumber);
+            });
+            currentStep = stepNumber;
+            if (currentStep === totalSteps) {
+                updateSummary(); // Update summary when reaching the final step
             }
-            // Update the summary automatically when reaching the final step
-            if (stepNumber === totalSteps) { // Check against totalSteps
-                updateSummary();
+             // Scroll form into view (optional, good for mobile)
+            if (multiStepForm) {
+                multiStepForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
@@ -604,45 +602,20 @@
             }
         }
 
-        // Function to toggle contact input fields based on radio selection
-        function toggleContactInput(method) {
-            if (method === 'email') {
-                emailInputContainer.classList.add('active');    // Show email input
-                phoneInputContainer.classList.remove('active'); // Hide phone input
-                emailInput.required = true;  // Make email required
-                phoneInput.required = false; // Make phone not required
-                phoneInput.value = '';       // Clear phone input value
-            } else if (method === 'phone') {
-                phoneInputContainer.classList.add('active');    // Show phone input
-                emailInputContainer.classList.remove('active'); // Hide email input
-                phoneInput.required = true;  // Make phone required
-                emailInput.required = false; // Make email not required
-                emailInput.value = '';       // Clear email input value
-            }
-        }
-
-        // Add event listeners for contact method radio button changes
-        contactMethodRadios.forEach(radio => {
-            radio.addEventListener('change', (event) => {
-                toggleContactInput(event.target.value);
-            });
-        });
-
         // Function to validate the current step's required fields
         function validateStep(step) {
             const currentStepElement = document.getElementById(`step-${step}`);
-            if (!currentStepElement) return false; // Should not happen
+            if (!currentStepElement) return false;
 
             let isValid = true;
             // Clear previous error styles
             currentStepElement.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
             currentStepElement.querySelectorAll('.radio-group-invalid').forEach(el => el.classList.remove('radio-group-invalid'));
 
-            // Find all required inputs within the current step
             const requiredInputs = currentStepElement.querySelectorAll('[required]');
 
             requiredInputs.forEach(input => {
-                // Skip validation for inputs inside inactive containers (like the hidden contact method)
+                // Skip validation for inputs inside inactive containers
                 const parentContainer = input.closest('.contact-input-container');
                  if (parentContainer && !parentContainer.classList.contains('active')) {
                     return; // Skip this input
@@ -652,20 +625,19 @@
                 // Check different input types
                 if (input.type === 'radio') {
                     const groupName = input.name;
-                    // Check if any radio button in the group is checked
+                    const groupContainer = input.closest('.radio-group-container') || input.closest('div#contact-method-options'); // Find the container
                     if (!currentStepElement.querySelector(`input[name="${groupName}"]:checked`)) {
                         fieldValid = false;
-                        // Add error style to the container of the radio group for visual feedback
-                        const groupContainer = input.closest('div.grid, div#contact-method-options'); // Find the container
-                        if (groupContainer) {
-                            groupContainer.classList.add('radio-group-invalid');
-                        }
+                        if (groupContainer) { groupContainer.classList.add('radio-group-invalid'); }
                         console.error(`Validation failed for radio group: ${groupName}`);
                     }
                 } else if (input.type === 'file') {
-                    // Check if a file has been selected
-                    if (input.files.length === 0) {
-                        fieldValid = false;
+                     // Basic check for file selection (won't work for app integrations like Upload-Lift)
+                     // You'll need Upload-Lift's specific validation method here
+                    if (input.files.length < 2) { // Check for minimum 2 files
+                        // isValid = false; // Temporarily disable, rely on app's validation
+                        fieldValid = false; // Enable basic check
+                        console.warn(`Validation failed: Less than 2 files selected for ${input.name || input.id}.`);
                     }
                 } else { // Text, email, tel etc.
                     // Check if the input value is empty after trimming whitespace
@@ -703,10 +675,36 @@
 
             // Alert the user if validation fails
              if (!isValid) {
-                alert('Please fill in all required fields correctly for this step.');
+                alert('Please complete all required fields correctly for this step.');
             }
             return isValid; // Return true if all required fields are valid, false otherwise
         }
+
+
+        // Function to toggle contact input fields based on radio selection
+        function toggleContactInput(method) {
+            if (!emailInputContainer || !phoneInputContainer || !emailInput || !phoneInput) return;
+            if (method === 'email') {
+                emailInputContainer.classList.add('active');
+                phoneInputContainer.classList.remove('active');
+                emailInput.required = true;
+                phoneInput.required = false;
+                phoneInput.value = '';
+            } else if (method === 'phone') {
+                phoneInputContainer.classList.add('active');
+                emailInputContainer.classList.remove('active');
+                phoneInput.required = true;
+                emailInput.required = false;
+                emailInput.value = '';
+            }
+        }
+
+        // Add event listeners for contact method radio button changes
+        contactMethodRadios.forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                toggleContactInput(event.target.value);
+            });
+        });
 
         // Function to update the order summary display
         function updateSummary() {
@@ -714,96 +712,101 @@
             const selectedCategory = formData.get('category') || 'Not Selected';
             const selectedFormat = formData.get('format') || 'Not Selected';
 
-            // Helper function to capitalize first letter
+            // Capitalize helper function
             const capitalize = (s) => s && s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 
-            // Update summary text fields
             document.getElementById('summary-category').textContent = capitalize(selectedCategory);
             document.getElementById('summary-format').textContent = capitalize(selectedFormat);
-            // Size is fixed, display depends on format
+            // Size is fixed
             document.getElementById('summary-size').textContent = (selectedFormat === 'framed') ? '12x16 inches (Fixed)' : 'N/A (Digital File)';
 
             // Calculate Price
             let basePrice = 0;
             let shippingCost = 0;
             let totalPrice = 0;
+            const shippingLine = document.getElementById('summary-shipping-line');
 
-            // Determine base price based on format
             if (selectedFormat === 'digital') {
                 basePrice = prices.digital;
-                shippingCost = 0; // No shipping for digital
-                document.getElementById('summary-shipping-line').style.display = 'none'; // Hide shipping line
+                shippingCost = 0;
+                if(shippingLine) shippingLine.style.display = 'none';
             } else if (selectedFormat === 'framed') {
                 basePrice = prices.framed;
-                shippingCost = prices.shipping; // Add shipping for framed
-                document.getElementById('summary-shipping-line').style.display = 'flex'; // Show shipping line
+                shippingCost = prices.shipping;
+                 if(shippingLine) shippingLine.style.display = 'flex';
             }
             // Add category price modifiers here if needed
-            // Example: if (prices.category && prices.category[selectedCategory]) { basePrice += prices.category[selectedCategory]; }
 
-            totalPrice = basePrice + shippingCost; // Calculate total
+            totalPrice = basePrice + shippingCost;
 
-            // Update summary price fields
+            // Update summary display
             document.getElementById('summary-base-price').textContent = `$${basePrice.toFixed(2)}`;
-            document.getElementById('summary-shipping').textContent = `$${shippingCost.toFixed(2)}`;
+            if(shippingLine) document.getElementById('summary-shipping').textContent = `$${shippingCost.toFixed(2)}`;
             document.getElementById('summary-total-price').textContent = `$${totalPrice.toFixed(2)}`;
         }
 
-        // Add event listeners to update summary dynamically when relevant selections change
-         document.querySelectorAll('#step-2 input, #step-3 input').forEach(input => {
+        // Add event listeners to update summary dynamically when options change
+         document.querySelectorAll('input[name="category"], input[name="format"]').forEach(input => {
              input.addEventListener('change', () => {
-                 // Only update the summary if the user is currently viewing the summary step
-                 if (currentStep === totalSteps) {
+                 if (currentStep === totalSteps) { // Only update if on the summary step
                      updateSummary();
                  }
              });
          });
 
 
-        // Handle Final Form Submission
+        // Handle Final Form Submission (Example - Redirect to Payment Link)
         if (multiStepForm) {
             multiStepForm.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
+                event.preventDefault(); // Prevent default submission
 
-                 // Validate the final step before proceeding
-                 if (!validateStep(totalSteps)) {
-                    return; // Stop submission if validation fails
+                 if (!validateStep(totalSteps)) { // Validate the final step
+                    return;
                 }
 
                 console.log('Final Form Submit Triggered!');
-                const formData = new FormData(multiStepForm); // Get all form data
-
-                // Extract relevant data for logging/processing
+                const formData = new FormData(multiStepForm);
                 const selectedFormat = formData.get('format');
                 const contactMethod = formData.get('contact_method');
                 const contactValue = contactMethod === 'email' ? formData.get('email') : formData.get('phone');
 
-                // Log collected data (replace with actual submission logic, e.g., AJAX request)
-                console.log('--- Order Details ---');
+                // Log collected data
+                console.log('--- Order Details (Standalone HTML) ---');
                 console.log('Name:', formData.get('name'));
                 console.log('Contact Method:', contactMethod);
                 console.log('Contact Info:', contactValue);
-                console.log('Photo:', formData.get('photo') ? formData.get('photo').name : 'No file selected');
+                console.log('Photo(s) Selected:', document.getElementById('photo').files); // Log file list object
                 console.log('Category:', formData.get('category'));
                 console.log('Format:', selectedFormat);
-                console.log('Size:', selectedFormat === 'framed' ? '12x16 inches' : 'N/A'); // Log fixed size or N/A
                 console.log('Estimated Total:', document.getElementById('summary-total-price').textContent);
                 console.log('---------------------');
 
-                // Simulate submission success - show confirmation to user
-                alert(`Thank you, ${formData.get('name')}! Your Pawsterpiece order details have been received. We will contact you via ${contactMethod} (${contactValue}) regarding payment and the preview process shortly. Summary: Category - ${formData.get('category')}, Format - ${selectedFormat}. Total: ${document.getElementById('summary-total-price').textContent}`);
+                // --- Payment Integration Point ---
+                let paymentUrl = '';
+                // !!! REPLACE THESE WITH YOUR ACTUAL STRIPE/PAYPAL LINKS !!!
+                const digitalPaymentLink = 'YOUR_DIGITAL_PRODUCT_PAYMENT_LINK';
+                const framedPaymentLink = 'YOUR_FRAMED_PRODUCT_PAYMENT_LINK';
 
-                // Reset the form and go back to the first step
-                 multiStepForm.reset(); // Clear all form fields
-                 toggleContactInput('email'); // Reset contact input display to email default
-                 showStep(1); // Show the first step again
+                if (selectedFormat === 'digital') {
+                    paymentUrl = digitalPaymentLink;
+                } else if (selectedFormat === 'framed') {
+                    paymentUrl = framedPaymentLink;
+                }
+
+                if (paymentUrl && paymentUrl.startsWith('http')) {
+                     alert(`Thank you! You will now be redirected to securely complete your payment for the ${selectedFormat} Pawsterpiece.`);
+                     window.location.href = paymentUrl;
+                } else {
+                     alert(`Thank you, ${formData.get('name')}! Order details logged. Payment link configuration needed.`);
+                     console.error("Payment links not configured in JS.");
+                }
             });
         }
 
         // Initialize the form on page load
         document.addEventListener('DOMContentLoaded', () => {
+            if(formSteps.length > 0) showStep(1); // Display the first step if steps exist
             toggleContactInput('email'); // Ensure email input is shown by default
-            showStep(1); // Display the first step
         });
 
     </script>
